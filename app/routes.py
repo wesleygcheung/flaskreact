@@ -1,12 +1,11 @@
 from app import app, socketio
 from flask_socketio import emit
 from flask import request, jsonify, send_from_directory
-import os
+
 
 @app.route('/')
 def serve():
-    static_folder = os.path.join(os.path.dirname(app.root_path),'frontend','build')
-    return send_from_directory(static_folder, 'index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route("/http-call")
 def http_call():
