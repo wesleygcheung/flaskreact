@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     if (buttonStatus === true) {
-      const socket = io("localhost:5000/", {
+      const socket = io("https://tastingroom.herokuapp.com/", {
         transports: ["websocket"],
         cors: {
           origin: "http://localhost:3000/",
