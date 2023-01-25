@@ -16,10 +16,11 @@ function App() {
       setButtonStatus(false);
     }
   };
+  const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000/" : "https://tastingroom.herokuapp.com";
 
   useEffect(() => {
     if (buttonStatus === true) {
-      const socket = io("https://tastingroom.herokuapp.com/", {
+      const socket = io(api_url, {
         transports: ["websocket"],
         cors: {
           origin: "http://localhost:3000/",
