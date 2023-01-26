@@ -1,4 +1,5 @@
 from app import app, socketio
+from firebase_admin import auth
 from flask_socketio import emit
 from flask import request, jsonify, send_from_directory
 
@@ -11,6 +12,15 @@ def serve():
 def http_call():
     """return JSON with string data as the value"""
     data = {'data':'This text was fetched using an HTTP call to server on render'}
+    return jsonify(data)
+
+@app.route('/API/authenticate',methods = ['GET','POST'])
+def api_authenticate():
+    header = request.headers
+    print(header['Authorization'])
+    auth_status = auth.verify_id_token(header['Authorization'])
+    print(auth_status)
+    data = {'data':'Auth Received'}
     return jsonify(data)
 
 @socketio.on("connect")

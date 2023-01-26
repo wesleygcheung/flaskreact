@@ -1,6 +1,7 @@
 import "./App.css";
 import HttpCall from "./components/HttpCall";
 import WebSocketCall from "./components/WebSocketCall";
+import Navbar from "./components/Navbar";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 
@@ -47,6 +48,7 @@ function App() {
 
   return (
     <div className="App">
+      <Navbar apiUrl={api_url} />
       <h1>React/Flask App + socket.io</h1>
       <div className="line">
         <HttpCall />
