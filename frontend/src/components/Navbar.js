@@ -13,7 +13,7 @@ const Navbar = ({apiUrl}) => {
             setUserAuth(user);
             console.log('onAuthStageChanged: Auth');
             const cancelToken = axios.CancelToken.source()
-            axios.post(apiUrl+'API/authenticate', { hello: 'world' }, {
+            axios.post(apiUrl+'/API/authenticate', { hello: 'world' }, {
                 headers: {
                   'Authorization': `${user.accessToken}`
                 },
