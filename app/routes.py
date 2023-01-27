@@ -17,10 +17,9 @@ def http_call():
 @app.route('/API/authenticate',methods = ['GET','POST'])
 def api_authenticate():
     header = request.headers
-    print(header['Authorization'])
-    auth_status = auth.verify_id_token(header['Authorization'])
-    print(auth_status)
-    data = {'data':'Auth Received'}
+    auth_token = auth.verify_id_token(header['Authorization'])
+    print(f"User ID: {auth_token['uid']}")
+    data = {'data':f"Auth Received for {auth_token['uid']}"}
     return jsonify(data)
 
 @socketio.on("connect")
