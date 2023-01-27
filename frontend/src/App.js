@@ -17,7 +17,7 @@ function App() {
       setButtonStatus(false);
     }
   };
-  const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000/" : "https://tastingroom.herokuapp.com";
+  const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000/" : "https://tastingroom.herokuapp.com/";
 
   useEffect(() => {
     if (buttonStatus === true) {
