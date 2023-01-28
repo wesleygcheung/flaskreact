@@ -8,7 +8,12 @@ const NoPage = () => {
       navigate("/")
     }, 2000)
   },[])
-  return <h1>Not Found</h1>;
+  return (
+    <div className="grid-container">
+      <h1>Not Found</h1>
+    </div>
+  )
+  ;
 };
   
 export default NoPage;

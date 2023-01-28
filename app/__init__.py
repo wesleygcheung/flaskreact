@@ -13,8 +13,8 @@ import json
 
 ### Initialize Flask App and Configurations###
 load_dotenv()
-app = Flask(__name__,static_folder='',static_url_path='')
-app.static_folder = os.path.join(os.path.dirname(app.root_path),'frontend','build')
+app = Flask(__name__,static_folder='../frontend/build',static_url_path='')
+
 CORS(app,resources={r"/*":{"origins":"*"}})
 app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
 firebase_config = os.getenv('FBASE_CONFIG')

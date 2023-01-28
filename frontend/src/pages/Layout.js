@@ -1,5 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import { onAuthStateChanged, signOut, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import {auth, provider} from '../components/Auth';
 import axios from 'axios';
@@ -39,23 +39,23 @@ const Layout = () => {
       }
   });
 
-
   const handleClick = () => {
       signInWithRedirect(auth, provider);
   }
-  getRedirectResult(auth)
-  .then((result) => {
-      // This gives you a Google Access Token. You can use it to access Google APIs.
-      // const credential = GoogleAuthProvider.credentialFromResult(result);
-      // const token = credential.accessToken;
 
-      console.log('getRedirectResult: Received');
-  }).catch((error) => {return});
+  // getRedirectResult(auth)
+  // .then((result) => {
+  //     // This gives you a Google Access Token. You can use it to access Google APIs.
+  //     // const credential = GoogleAuthProvider.credentialFromResult(result);
+  //     // const token = credential.accessToken;
+
+  //     console.log('getRedirectResult: Received');
+  // }).catch((error) => {return});
 
   const logout = () => {signOut(auth).then(() => {
       // Sign-out successful.
       console.log('Signed Out');
-
+      window.location.replace(api_url);
       }).catch((error) => {
       // An error happened.
       console.log(error);
@@ -64,12 +64,19 @@ const Layout = () => {
   return (
     <>
       <div className='navbar'>
-        <div className='navbar-right-links'>
-          {getUserAuth!==null ? <Link className='navbar-links' to="/">Hi, {getUserAuth.displayName}</Link>: null}
-          <Link className='navbar-links' to="/">Home</Link>
-          <Link className='navbar-links' to="/about">About</Link>
+        <div className="navbar-left-links">
+          <Link className="navbar-link-text" to="/"><h2>MyLogo</h2></Link>
+        </div>
+        <div className='navbar-center-links'>
+          <Link className='navbar-links navbar-link-text' to="/">Home</Link>
+          <Link className='navbar-links navbar-link-text' to="/about">About</Link>
+        </div>
+        <div className="navbar-right-links">
           {getUserAuth!==null ? (
-              <Link to="/" onClick={logout}>Sign Out</Link>
+            <>
+              <Link className='navbar-links navbar-link-text' to="/profile">Hi, {getUserAuth.displayName}</Link>
+              <button className="google-login" onClick={logout}>Sign out of Google</button>
+            </>
           ) : (
               <button className="google-login" onClick={handleClick}>Sign in with Google</button>
           )}

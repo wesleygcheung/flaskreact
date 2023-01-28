@@ -1,11 +1,12 @@
 from app import app, socketio
 from firebase_admin import auth
 from flask_socketio import emit
-from flask import request, jsonify, send_from_directory
-
+from flask import request, jsonify, send_from_directory, render_template
+import os
 
 @app.route('/')
 def serve():
+    print("Home path")
     return send_from_directory(app.static_folder, 'index.html')
 
 @app.route("/http-call")
@@ -21,6 +22,10 @@ def api_authenticate():
     print(f"User ID: {auth_token['uid']}")
     data = {'data':f"Auth Received for {auth_token['uid']}"}
     return jsonify(data)
+
+@app.errorhandler(404)
+def handle_404(e):
+    return send_from_directory(app.static_folder, 'index.html')
 
 @socketio.on("connect")
 def connected():
