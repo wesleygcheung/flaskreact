@@ -1,20 +1,20 @@
 import "./App.css";
-import HttpCall from "./components/HttpCall";
-import Navbar from "./components/Navbar";
-import Socket from "./components/Socket";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./pages/Layout";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import NoPage from "./pages/NoPage";
 
 function App() {
-  const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000/" : "https://tastingroom.herokuapp.com";
 
   return (
-    <div className="App">
-      <Navbar apiUrl={api_url} />
-      <h1>React/Flask App + socket.io</h1>
-      <div className="line">
-        <HttpCall />
-      </div>
-      <Socket apiUrl={api_url}/>
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="*" element={<NoPage />} />
+      </Route>
+    </Routes>
   );
 }
 
