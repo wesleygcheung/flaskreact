@@ -11,21 +11,21 @@ import json
 
 #### App Initializations ####
 
-### Initialize Flask App and Configurations###
+### Initialize Flask App and Configurations ###
 load_dotenv()
-app = Flask(__name__,static_folder='../frontend/build',static_url_path='')
-
-CORS(app,resources={r"/*":{"origins":"*"}})
+app = Flask(__name__,static_folder='../frontend/build',static_url_path='') # static folder must point to React build directory
 app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
-firebase_config = os.getenv('FBASE_CONFIG')
-firebase_config_decoded = json.loads(base64.b64decode(firebase_config))
-cred = credentials.Certificate(firebase_config_decoded)
 
-firebase_app = firebase_admin.initialize_app(credentials.Certificate(firebase_config_decoded))
+### Initialize to allow CORS with React ###
+CORS(app,resources={r"/*":{"origins":"*"}})
+
+### Setup Firebase admin to enable JWT token verification ###
+firebase_config = os.getenv('FBASE_CONFIG') # Firebase console configuration is encoded as a base64 string via OpenSSL and stored in .env
+firebase_config_decoded = json.loads(base64.b64decode(firebase_config)) # Decode the Firebase config back to a JSON
+cred = credentials.Certificate(firebase_config_decoded) # Generate a credentials certificate from the config
+firebase_app = firebase_admin.initialize_app(credentials.Certificate(firebase_config_decoded)) # Initialize Firebase using the credentials
 
 ### Initialize SocketIO ###
 socketio = SocketIO(app, cors_allowed_origins="*")
-
-### Swap Debug Mode / Development DB vs. Production Mode / Production DB ###
 
 from app import routes

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom"
 
 export default function WebSocketCall({ socket }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const context = useOutletContext()
 
   const handleText = (e) => {
     const inputMessage = e.target.value;
@@ -13,7 +15,7 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("data", message);
+    socket.emit("data", [message, context.user.uid]);
     setMessage("");
   };
 

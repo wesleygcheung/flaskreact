@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react';
 import WebSocketCall from "./WebSocketCall";
 import { io } from "socket.io-client";
 import '../App.css';
-
+import { useOutletContext } from "react-router-dom"
 
 const Socket = ({apiUrl}) => {
     const [socketInstance, setSocketInstance] = useState("");
     const [loading, setLoading] = useState(true);
     const [buttonStatus, setButtonStatus] = useState(false);
-  
+    const context = useOutletContext()
+
     const handleClick = () => {
       if (buttonStatus === false) {
         setButtonStatus(true);
@@ -46,16 +47,20 @@ const Socket = ({apiUrl}) => {
 
     return (
         <>
-            {!buttonStatus ? (
-                <button onClick={handleClick}>turn chat on</button>
-            ) : (
-                <>
-                <button onClick={handleClick}>turn chat off</button>
-                <div className="line">
-                    {!loading && <WebSocketCall socket={socketInstance} />}
-                </div>
-                </>
-            )}
+          {context.user!==null ? (
+            <>
+              {!buttonStatus ? (
+                  <button onClick={handleClick}>turn chat on</button>
+              ) : (
+                  <>
+                  <button onClick={handleClick}>turn chat off</button>
+                  <div className="line">
+                      {!loading && <WebSocketCall socket={socketInstance} />}
+                  </div>
+                  </>
+              )}
+            </>) : null
+          }
         </>
     );
 }

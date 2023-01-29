@@ -13,6 +13,7 @@ const Layout = () => {
       if(user !== null) {
           setUserAuth(user);
           console.log('onAuthStageChanged: Auth');
+          console.log(user);
           const cancelToken = axios.CancelToken.source()
           axios.post(api_url+'/API/authenticate', { hello: 'world' }, {
               headers: {
@@ -70,12 +71,23 @@ const Layout = () => {
         <div className='navbar-center-links'>
           <Link className='navbar-links navbar-link-text' to="/">Home</Link>
           <Link className='navbar-links navbar-link-text' to="/about">About</Link>
+          {getUserAuth!==null ? (
+            <Link className='navbar-links navbar-link-text' to="/profile">Profile</Link>
+          ): (null)
+          }
         </div>
         <div className="navbar-right-links">
           {getUserAuth!==null ? (
             <>
-              <Link className='navbar-links navbar-link-text' to="/profile">Hi, {getUserAuth.displayName}</Link>
-              <button className="google-login" onClick={logout}>Sign out of Google</button>
+              <Link to="/profile">
+                <button className="profile-button" onClick={logout}>
+                  <div className='profile-pic-container'>
+                    <img referrerPolicy="no-referrer" className="profile-pic" src={getUserAuth.photoURL} alt=''></img>
+                    <span className="display-name">{getUserAuth.displayName}</span>
+                  </div>
+                </button>
+              </Link>
+              {/* <button className="google-login" onClick={logout}>Sign out of Google</button> */}
             </>
           ) : (
               <button className="google-login" onClick={handleClick}>Sign in with Google</button>

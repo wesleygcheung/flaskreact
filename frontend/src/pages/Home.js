@@ -3,7 +3,7 @@ import Socket from "../components/Socket";
 
 const Home = () => {
   const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000/" : "https://tastingroom.herokuapp.com";
-
+  
   return (
     <div className="grid-container">
       <div className="grid-sub-container">
