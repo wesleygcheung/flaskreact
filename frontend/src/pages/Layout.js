@@ -1,44 +1,55 @@
-import { Outlet, Link } from "react-router-dom";
-import React, { useState } from 'react';
-import { onAuthStateChanged, signOut, signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { onAuthStateChanged, signOut, signInWithRedirect } from "firebase/auth";
 import {auth, provider} from '../components/Auth';
 import axios from 'axios';
 import '../App.css';
+import { useSelector } from "react-redux";
+
 
 const Layout = () => {
-  const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000/" : "https://tastingroom.herokuapp.com";
-  const [getUserAuth,setUserAuth] = useState(null);
-
-  onAuthStateChanged(auth, user => {
-      if(user !== null) {
-          setUserAuth(user);
-          console.log('onAuthStageChanged: Auth');
-          console.log(user);
-          const cancelToken = axios.CancelToken.source()
-          axios.post(api_url+'/API/authenticate', { hello: 'world' }, {
-              headers: {
-                'Authorization': `${user.accessToken}`
-              },
-              cancelToken: cancelToken.token
-            })
-              .then(response => {
-                  console.log(response);
+  const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000" : "https://tastingroom.herokuapp.com";
+  const [localUser, setLocalUser] = useState(null);
+  const navigate = useNavigate()
+  const state = useSelector((state)=>
+    state
+  );
+  const localStorageUser = JSON.parse(localStorage.getItem('user'));
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+        if(user !== null) {
+            // setUserAuth(user);
+            console.log('onAuthStageChanged: Auth');
+            setLocalUser(user);
+            localStorage.setItem('user',JSON.stringify(user));
+            const cancelToken = axios.CancelToken.source()
+            axios.post(api_url+'/API/authenticate', { hello: 'world' }, {
+                headers: {
+                  'Authorization': `${user.accessToken}`
+                },
+                cancelToken: cancelToken.token
               })
-              .catch(error => {
-                  if(axios.isCancel(error)){
-                      console.log("Cancelled");
-                  } else {
-                      console.log(error);
-                  };
-              });
-          return () => {
-              cancelToken.cancel()
-          };
-      } else {
-          console.log('onAuthStageChanged: No Auth');
-          setUserAuth(null);
-      }
-  });
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    if(axios.isCancel(error)){
+                        console.log("Cancelled");
+                    } else {
+                        console.log(error);
+                    };
+                });
+            return () => {
+                cancelToken.cancel()
+            };
+        } else {
+            console.log('onAuthStageChanged: No Auth');
+            // setUserAuth(null);
+        }
+    });
+
+  },[localUser])
+
 
   const handleClick = () => {
       signInWithRedirect(auth, provider);
@@ -56,7 +67,9 @@ const Layout = () => {
   const logout = () => {signOut(auth).then(() => {
       // Sign-out successful.
       console.log('Signed Out');
-      window.location.replace(api_url);
+      setLocalUser(null);
+      localStorage.removeItem('user');
+      navigate("/")
       }).catch((error) => {
       // An error happened.
       console.log(error);
@@ -64,29 +77,32 @@ const Layout = () => {
 
   return (
     <>
-      <div className='navbar'>
+      <div className={state.authReducer.menuColored === 'dark' ? 'navbar-dark':'navbar'}>
         <div className="navbar-left-links">
           <Link className="navbar-link-text" to="/"><h2>MyLogo</h2></Link>
         </div>
         <div className='navbar-center-links'>
           <Link className='navbar-links navbar-link-text' to="/">Home</Link>
           <Link className='navbar-links navbar-link-text' to="/about">About</Link>
-          {getUserAuth!==null ? (
+          {!!localUser && (
             <Link className='navbar-links navbar-link-text' to="/profile">Profile</Link>
-          ): (null)
+          )
           }
         </div>
         <div className="navbar-right-links">
-          {getUserAuth!==null ? (
+          {!!localUser ? (
             <>
-              <Link to="/profile">
-                <button className="profile-button" onClick={logout}>
+                <button className="profile-button">
                   <div className='profile-pic-container'>
-                    <img referrerPolicy="no-referrer" className="profile-pic" src={getUserAuth.photoURL} alt=''></img>
-                    <span className="display-name">{getUserAuth.displayName}</span>
+                    <img referrerPolicy="no-referrer" className="profile-pic" src={localUser.photoURL} alt=''></img>
+                    <span className="display-name">{localUser.displayName}</span>
+                    <i className="fa fa-bars burger"></i>
                   </div>
                 </button>
-              </Link>
+                <div className='profile-pic-child-container'>
+                  <Link to="/profile">Profile</Link><br></br>
+                  <Link to="/" onClick={logout}>Sign Out</Link>
+                </div>
               {/* <button className="google-login" onClick={logout}>Sign out of Google</button> */}
             </>
           ) : (
@@ -94,7 +110,7 @@ const Layout = () => {
           )}
         </div>
       </div>
-      <Outlet context={{user: getUserAuth}}/>
+      <Outlet context={{user: localUser}}/>
     </>
   )
 };

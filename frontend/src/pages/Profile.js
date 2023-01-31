@@ -5,17 +5,18 @@ import { useNavigate } from "react-router-dom";
 const Profile = () => {
     const context = useOutletContext()
     const navigate = useNavigate()
+    const localStorageUser = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
-        if (context.user == null){
+        if (localStorageUser == null){
             navigate("/")
         }
-      },[context])
+      },[localStorageUser])
     return (
         <>
-            {context.user !== null ? 
+            {localStorageUser !== null ? 
                 <div className="grid-container">
                     <div className="grid-sub-container">
-                        <h1>Welcome, {context.user.displayName}</h1>
+                        <h1>Welcome, {localStorageUser.displayName}</h1>
                     </div>
                 </div>
                 :

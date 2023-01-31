@@ -1,8 +1,11 @@
-.navbar{
+.navbar,.navbar-dark{
   display: grid;
   height: 100px;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
+}
+.navbar-dark{
+  background-color: #000000;
 }
 .navbar-left-links{
   grid-column: 2 / 4;
@@ -29,7 +32,7 @@
   padding-left: 10px;
   padding-top: 6px;
   padding-bottom: 6px;
-  width: 165px;
+  width: 200px;
   border: none;
   border-radius: 20px;
   box-shadow: 0 -1px 1px rgba(0, 0, 0, .04), 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
@@ -62,18 +65,43 @@
 .profile-pic{
   border-radius: 50%;
   height: 30px;
-  margin-right: 12px;
-  justify-self: start;
+  padding-right: 4px;
+  justify-self: center;
   align-self: center;
+  grid-column: 1 / 2;
 }
 .profile-pic-container{
   display: grid;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 20% 60% 20%;
   grid-template-rows: 1 /1;
 }
 .display-name{
-  justify-self: end;
+  justify-self: center;
   align-self: center;
+  grid-column: 2 / 3;
+  padding-bottom: 4px;
+}
+.burger{
+  grid-column: 3 / 4;
+  justify-self: center;
+  align-self: center;
+}
+.profile-pic-child-container{
+  transition: background-color .2s, box-shadow .2s;
+  position: absolute;
+  padding: 12px;
+  width: 175px;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 -1px 1px rgba(0, 0, 0, .04), 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+  
+  color: #757575;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+  
+  background-color: white;
 }
 .google-login{
   transition: background-color .2s, box-shadow .2s;
@@ -122,6 +150,8 @@
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: auto;
   grid-auto-flow: row;
+  background-color:#e4f1ff;
+  height: calc(100vh - 100px);
 }
 .grid-sub-container{
   grid-column: 2/5;
