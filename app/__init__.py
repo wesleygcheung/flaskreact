@@ -16,7 +16,7 @@ from flask_sqlalchemy import SQLAlchemy
 load_dotenv()
 app = Flask(__name__,static_folder='../frontend/build',static_url_path='') # static folder must point to React build directory
 app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1) # SQLAlchemy requires 'postgresql' whereas Heroku URI is 'postgres'
 
 ### Initialize PostgreSQL DB ###
 db = SQLAlchemy()

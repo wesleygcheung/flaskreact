@@ -8,6 +8,14 @@ const Home = () => {
     <div className="grid-container">
       <div className="grid-sub-container">
         <h1>React/Flask App with Socket.IO and Firebase auth</h1>
+        <h2>Stack:
+          <li>Flask</li>
+          <li>React</li>
+          <li>React Router</li>
+          <li>Redux</li>
+          <li>PostgreSQL</li>
+          <li>SocketIO</li>
+        </h2>
         <div className="line">
           <HttpCall />
         </div>

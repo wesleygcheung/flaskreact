@@ -25,6 +25,9 @@
   justify-self: end;
   align-self: center;
 }
+.hidden{
+  display: none;
+}
 .profile-button{
   transition: background-color .2s, box-shadow .2s;
   height: 42.4px;

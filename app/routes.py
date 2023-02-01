@@ -23,8 +23,8 @@ def api_authenticate():
     header = request.headers
     try:
         auth_token = auth.verify_id_token(header['Authorization'])
-        exists = db.session.query(Users.uid).filter_by(uid=auth_token['uid']).scalar() is not None
-        if not exists:
+        user_exists = db.session.query(Users.uid).filter_by(uid=auth_token['uid']).scalar() is not None
+        if not user_exists:
             user = Users(uid=auth_token['uid'],name=auth_token['name'],email=auth_token['email'])
             db.session.add(user)
             db.session.commit()
@@ -32,6 +32,20 @@ def api_authenticate():
         return jsonify(data)
     except:
         return jsonify({'data':'Authentication Error'})
+
+@app.route('/API/profile',methods=['POST'])
+def api_profile():
+    header = request.headers
+    try:
+        auth_token = auth.verify_id_token(header['Authorization'])
+        user = db.session.query(Users).filter_by(uid=auth_token['uid']).scalar()
+        if user is not None:
+            data = {'data':{'name':user.name,'email':user.email,'uid':user.uid}}
+            return jsonify(data)
+        else:
+            return jsonify({'data':f'Authentication Error: User Does Not Exist'})
+    except Exception as e:
+        return jsonify({'data':f'Authentication Error: {e}'})
 
 ### Ensure directly accessing React router dom routes will point to React app and not Flask routes ###
 @app.errorhandler(404)

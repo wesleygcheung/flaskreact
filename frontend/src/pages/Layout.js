@@ -5,12 +5,14 @@ import {auth, provider} from '../components/Auth';
 import axios from 'axios';
 import '../App.css';
 import { useSelector } from "react-redux";
+import OutsideClickHandler from 'react-outside-click-handler';
 
 
 const Layout = () => {
   const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000" : "https://tastingroom.herokuapp.com";
   // State for tracking firebase auth
   const [localUser, setLocalUser] = useState(null);
+  const [menuHidden, setMenuHidden] = useState(true);
   const navigate = useNavigate()
   // Retrieve state from reducers
   const state = useSelector((state)=>
@@ -66,6 +68,12 @@ const Layout = () => {
       console.log({error});
   })};
 
+  const toggleMenu = () =>{
+    setMenuHidden(menuHidden => !menuHidden);
+  }
+  const closeMenu = () =>{
+    setMenuHidden(true);
+  }
   return (
     <>
       <div className={state.authReducer.menuColored === 'dark' ? 'navbar-dark':'navbar'}>
@@ -75,25 +83,27 @@ const Layout = () => {
         <div className='navbar-center-links'>
           <Link className='navbar-links navbar-link-text' to="/">Home</Link>
           <Link className='navbar-links navbar-link-text' to="/about">About</Link>
-          {!!localUser && (
-            <Link className='navbar-links navbar-link-text' to="/profile">Profile</Link>
-          )
-          }
         </div>
         <div className="navbar-right-links">
           {!!localUser ? (
             <>
-                <button className="profile-button">
-                  <div className='profile-pic-container'>
-                    <img referrerPolicy="no-referrer" className="profile-pic" src={localUser.photoURL} alt=''></img>
-                    <span className="display-name">{localUser.displayName}</span>
-                    <i className="fa fa-bars burger"></i>
+                <OutsideClickHandler
+                  onOutsideClick={() => {
+                    !menuHidden && closeMenu()
+                  }}
+                >
+                  <button className="profile-button" onClick={toggleMenu}>
+                    <div className='profile-pic-container'>
+                      <img referrerPolicy="no-referrer" className="profile-pic" src={localUser.photoURL} alt=''></img>
+                      <span className="display-name">{localUser.displayName}</span>
+                      <i className="fa fa-bars burger"></i>
+                    </div>
+                  </button>
+                  <div className={!!menuHidden ? 'hidden profile-pic-child-container' : 'profile-pic-child-container'}>
+                    <Link to="/profile">Profile</Link><br></br>
+                    <Link to="/" onClick={logout}>Sign Out</Link>
                   </div>
-                </button>
-                <div className='profile-pic-child-container'>
-                  <Link to="/profile">Profile</Link><br></br>
-                  <Link to="/" onClick={logout}>Sign Out</Link>
-                </div>
+                </OutsideClickHandler>
             </>
           ) : (
               <button className="google-login" onClick={handleClick}>Sign in with Google</button>
