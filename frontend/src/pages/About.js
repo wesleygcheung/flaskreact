@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useOutletContext } from "react-router-dom"
 
 const About = () => {
+  const context = useOutletContext();
   const state = useSelector((state)=>
     state
   );
@@ -14,14 +16,14 @@ const About = () => {
     dispatch(action);
   }
   useEffect(()=>{console.log({state})},[state])
-
+  console.log(context.user);
   return (
       <div className="grid-container">
         <div className="grid-sub-container">
           <h1>About</h1>
           <button onClick={()=>handleClick('dark')}>Dark</button>
           <button onClick={()=>handleClick('light')}>Light</button>
-          <h2>{!!JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).displayName}</h2>
+          <h2>{!!context.user && context.user.displayName}</h2>
         </div>
       </div>
     );

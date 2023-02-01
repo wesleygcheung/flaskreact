@@ -8,6 +8,7 @@ import firebase_admin
 from firebase_admin import credentials
 import base64
 import json
+from flask_sqlalchemy import SQLAlchemy
 
 #### App Initializations ####
 
@@ -15,6 +16,11 @@ import json
 load_dotenv()
 app = Flask(__name__,static_folder='../frontend/build',static_url_path='') # static folder must point to React build directory
 app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
+### Initialize PostgreSQL DB ###
+db = SQLAlchemy()
+db.init_app(app)
 
 ### Initialize to allow CORS with React ###
 CORS(app,resources={r"/*":{"origins":"*"}})

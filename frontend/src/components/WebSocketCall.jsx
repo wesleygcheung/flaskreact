@@ -15,13 +15,14 @@ export default function WebSocketCall({ socket }) {
     if (!message) {
       return;
     }
-    socket.emit("data", [message, context.user.uid]);
+    socket.emit("data", [message, context.user]);
     setMessage("");
   };
 
   useEffect(() => {
     socket.on("data", (data) => {
-      setMessages([...messages, data.data]);
+      console.log(data);
+      setMessages([...messages, data.displayName+": "+data.data]);
     });
     return () => {
       socket.off("data", () => {

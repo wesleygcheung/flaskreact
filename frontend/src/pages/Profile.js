@@ -1,6 +1,5 @@
-import { useOutletContext } from "react-router-dom"
+import { useOutletContext, useNavigate } from "react-router-dom"
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
     const context = useOutletContext()

@@ -1,8 +1,8 @@
-from app import app, socketio
+from app import app, socketio, db
 from firebase_admin import auth
 from flask_socketio import emit
 from flask import request, jsonify, send_from_directory
-
+from app.database import Users
 
 ### App will serve up index.html from the React build directory ###
 @app.route('/')
@@ -18,13 +18,20 @@ def http_call():
     return jsonify(data)
 
 ### API call to authenticate Firebase token ###
-@app.route('/API/authenticate',methods = ['GET','POST'])
+@app.route('/API/authenticate',methods = ['POST'])
 def api_authenticate():
     header = request.headers
-    auth_token = auth.verify_id_token(header['Authorization'])
-    print(f"User ID: {auth_token['uid']}")
-    data = {'data':f"Auth Received for {auth_token['uid']}"}
-    return jsonify(data)
+    try:
+        auth_token = auth.verify_id_token(header['Authorization'])
+        exists = db.session.query(Users.uid).filter_by(uid=auth_token['uid']).scalar() is not None
+        if not exists:
+            user = Users(uid=auth_token['uid'],name=auth_token['name'],email=auth_token['email'])
+            db.session.add(user)
+            db.session.commit()
+        data = {'data':f"Auth Received for {auth_token['uid']}"}
+        return jsonify(data)
+    except:
+        return jsonify({'data':'Authentication Error'})
 
 ### Ensure directly accessing React router dom routes will point to React app and not Flask routes ###
 @app.errorhandler(404)
@@ -41,8 +48,7 @@ def connected():
 
 @socketio.on('data')
 def handle_message(data):
-    print(f"message: {data[0]}, user_id: {data[1]}")
-    emit("data",{'data':data,'id':request.sid},broadcast=True)
+    emit("data",{'data':data[0],'id':request.sid,'displayName':data[1]['displayName']},broadcast=True)
 
 @socketio.on("disconnect")
 def disconnected():

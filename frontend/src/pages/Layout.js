@@ -9,12 +9,14 @@ import { useSelector } from "react-redux";
 
 const Layout = () => {
   const api_url = window.location.hostname === 'localhost' ? "http://localhost:5000" : "https://tastingroom.herokuapp.com";
+  // State for tracking firebase auth
   const [localUser, setLocalUser] = useState(null);
   const navigate = useNavigate()
+  // Retrieve state from reducers
   const state = useSelector((state)=>
     state
   );
-  const localStorageUser = JSON.parse(localStorage.getItem('user'));
+
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
         if(user !== null) {
@@ -50,29 +52,18 @@ const Layout = () => {
 
   },[localUser])
 
-
+  // Firebase auth via redirect
   const handleClick = () => {
       signInWithRedirect(auth, provider);
   }
-
-  // getRedirectResult(auth)
-  // .then((result) => {
-  //     // This gives you a Google Access Token. You can use it to access Google APIs.
-  //     // const credential = GoogleAuthProvider.credentialFromResult(result);
-  //     // const token = credential.accessToken;
-
-  //     console.log('getRedirectResult: Received');
-  // }).catch((error) => {return});
-
+  // Firebase auth sign out
   const logout = () => {signOut(auth).then(() => {
-      // Sign-out successful.
-      console.log('Signed Out');
+      // Remove user info from state and local storage, then redirect to home
       setLocalUser(null);
       localStorage.removeItem('user');
       navigate("/")
       }).catch((error) => {
-      // An error happened.
-      console.log(error);
+      console.log({error});
   })};
 
   return (
@@ -103,13 +94,13 @@ const Layout = () => {
                   <Link to="/profile">Profile</Link><br></br>
                   <Link to="/" onClick={logout}>Sign Out</Link>
                 </div>
-              {/* <button className="google-login" onClick={logout}>Sign out of Google</button> */}
             </>
           ) : (
               <button className="google-login" onClick={handleClick}>Sign in with Google</button>
           )}
         </div>
       </div>
+      {/* Pass user data if logged in as context */}
       <Outlet context={{user: localUser}}/>
     </>
   )
