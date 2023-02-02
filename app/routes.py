@@ -49,9 +49,9 @@ def api_profile():
 @app.route('/__/auth/<filename>',methods=['GET','POST'])
 def sign_in_handler_js(filename):
     if '.js' in filename:
-        return send_from_directory(f"{app.static_folder}/signin_helpers/", filename)
+        return send_from_directory("./static", filename)
     else:
-        return send_from_directory(f"{app.static_folder}/signin_helpers/", f"{filename}.htm")
+        return send_from_directory("./static", f"{filename}.htm")
 
 ### Ensure directly accessing React router dom routes will point to React app and not Flask routes ###
 @app.errorhandler(404)
