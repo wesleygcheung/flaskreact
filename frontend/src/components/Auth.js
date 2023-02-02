@@ -3,7 +3,7 @@ import { getAuth,GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCm4Kn2kNenlE4TeNlmD9a79BVall5ujs0",
-    authDomain: "flaskreact-2c53b.firebaseapp.com",
+    authDomain: "tastingroom.herokuapp.com",
     projectId: "flaskreact-2c53b",
     storageBucket: "flaskreact-2c53b.appspot.com",
     messagingSenderId: "113661173572",

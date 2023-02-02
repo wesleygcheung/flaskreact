@@ -16,7 +16,6 @@ const About = () => {
     dispatch(action);
   }
   useEffect(()=>{console.log({state})},[state])
-  console.log(context.user);
   return (
       <div className="grid-container">
         <div className="grid-sub-container">

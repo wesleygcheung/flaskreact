@@ -7,7 +7,6 @@ from app.database import Users
 ### App will serve up index.html from the React build directory ###
 @app.route('/')
 def serve():
-    print("Home path")
     return send_from_directory(app.static_folder, 'index.html')
 
 ### Test API call ###
@@ -46,6 +45,13 @@ def api_profile():
             return jsonify({'data':f'Authentication Error: User Does Not Exist'})
     except Exception as e:
         return jsonify({'data':f'Authentication Error: {e}'})
+
+@app.route('/__/auth/<filename>',methods=['GET','POST'])
+def sign_in_handler_js(filename):
+    if '.js' in filename:
+        return send_from_directory(f"{app.static_folder}/signin_helpers/", filename)
+    else:
+        return send_from_directory(f"{app.static_folder}/signin_helpers/", f"{filename}.htm")
 
 ### Ensure directly accessing React router dom routes will point to React app and not Flask routes ###
 @app.errorhandler(404)

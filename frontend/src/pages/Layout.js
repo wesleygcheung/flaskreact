@@ -18,7 +18,7 @@ const Layout = () => {
   const state = useSelector((state)=>
     state
   );
-
+  !!localUser && localUser.getIdToken();
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
         if(user !== null) {
@@ -48,7 +48,7 @@ const Layout = () => {
             };
         } else {
             console.log('onAuthStageChanged: No Auth');
-            // setUserAuth(null);
+            setLocalUser(null);
         }
     });
 
@@ -99,9 +99,19 @@ const Layout = () => {
                       <i className="fa fa-bars burger"></i>
                     </div>
                   </button>
-                  <div className={!!menuHidden ? 'hidden profile-pic-child-container' : 'profile-pic-child-container'}>
-                    <Link to="/profile">Profile</Link><br></br>
-                    <Link to="/" onClick={logout}>Sign Out</Link>
+                  <div className={!!menuHidden ? 'hidden' : 'profile-pic-child-container'}>
+                    <Link className="menu-link" to="/profile">
+                      <div className="menu-item">
+                        <i className="menu-item-icon fa fa-user"></i>
+                        <span className="menu-item-link">Profile</span>
+                      </div>
+                    </Link>
+                    <Link className="menu-link" to="/" onClick={logout}>
+                      <div className="menu-item">
+                        <i className="menu-item-icon fa fa-right-from-bracket"></i>
+                        <span className="menu-item-link">Sign Out</span>
+                      </div>
+                    </Link>
                   </div>
                 </OutsideClickHandler>
             </>
